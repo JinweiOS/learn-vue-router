@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <!-- 两种写法一样-->
     <!--建议用v-slot-->
     <!-- <RedText>
       <template slot="title"> 这是标题，字体超大&加粗显示 </template>
