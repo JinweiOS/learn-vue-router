@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 // 引入 vue-l18n
-import VueI18n from 'vue-i18n'
+import VueI18n from 'vue-i18n';
 Vue.use(VueI18n)
 
 
