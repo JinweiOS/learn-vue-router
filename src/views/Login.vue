@@ -36,7 +36,9 @@
           class="self-input"
         />
         <div>
-          <el-button @click="login" size="small">{{$t('message.login')}}</el-button
+          <el-button @click="login" size="small">{{
+            $t("message.login")
+          }}</el-button
           >{{ loginData.token }}
         </div>
       </div>
@@ -58,7 +60,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import {loginService} from '@/service/login'
 import shareStore from "@/store/index.js";
 
 export default {
@@ -83,8 +85,32 @@ export default {
     async login() {
       // TODO: 用户信息验证
       // 网络请求拿到的
-      const res = await axios.get("http://learn.api.futureruntime.com/");
-      this.loginData.setAction("token", res.data.data.token);
+      const pathParams = 1;
+      
+      // 1.url里面有路径参数
+      // 2.config对象中依次为
+      // 2.1 params 查询参数
+      // 2.2 headers 配置我们的请求头部
+      // 2.3 data 部分配置我们的请求体
+      // const res = await http.post(`/pet/${pathParams}`, {
+      //   params: {
+      //     name: 'pjw',
+      //     password: 123456
+      //   },
+      //   data: {
+      //     body: '我很庞大'
+      //   }
+      // });
+      const res = await loginService(1, 'pjw', 'ttt', {body: '这是大成佛法'})
+      if (res.data.code !== 0) {
+        this.$notify({
+          title: "提示",
+          message: "登录失败!",
+          duration: 0,
+        });
+        return;
+      }
+      this.loginData.setAction("token", res.data.code);
       // const token = 'QAZ@WSXEDCV%TGuikfijedhngiks'
       // // 放入sessionStorage
       // sessionStorage.setItem('token', token)
