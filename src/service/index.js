@@ -26,4 +26,10 @@ http.interceptors.request.use(function (config) {
     return Promise.reject(error);
 });
 
+// 示例的传参
+// http.post(`/pet/${pathParams}`,
+//     { body: '这里放body' },
+//     { params: { username: '这里放查询参数' }, headers: { name: '这里放headers' } }
+// );
+
 export default http
