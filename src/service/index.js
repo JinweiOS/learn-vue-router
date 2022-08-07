@@ -3,7 +3,7 @@
 // 2.代理
 // 3.baseUrl
 // 4.授权的头部字段
-const DEV_URL = 'http://127.0.0.1:4523/m1/1375136-0-default'
+const DEV_URL = 'http://127.0.0.1:8082/'
 const PRODUCTION_URL = 'http://www.baidu.com/'
 
 

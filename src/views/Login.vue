@@ -101,8 +101,9 @@ export default {
       //     body: '我很庞大'
       //   }
       // });
-      const res = await loginService(1, 'pjw', 'ttt', {body: '这是大成佛法'})
-      if (res.data.code !== 0) {
+      const res = await loginService(this.username, this.password)
+      console.log(res)
+      if (!res.data.success) {
         this.$notify({
           title: "提示",
           message: "登录失败!",

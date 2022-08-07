@@ -1,59 +1,98 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div class="container">
+    <div class="input-bu" @click="open">
+      多文件上传之一劳永逸
+      <input ref="inputOpen" type="file" @change="getFile" />
+    </div>
+    <div>
+      <el-tag
+        v-for="(file, index) in files"
+        closable
+        :key="file.name"
+        @close="closeFileTag(index)"
+        >{{ file.name }}</el-tag
+      >
+    </div>
+    <el-button v-if="canUpload" @click="uploadAll">一次性上传</el-button>
+    <el-button v-if="canUpload" @click="uploadLine">连续的上传</el-button>
+    <el-button v-if="canUpload" @click="uploadPromiseAll">并发上传</el-button>
   </div>
 </template>
-
 <script>
+import http from "../service/index.js";
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
+  name: "HelloWorld",
+  data: function () {
+    return {
+      files: [],
+    };
+  },
+  computed: {
+    canUpload() {
+      return this.files.length !== 0;
+    },
+  },
+  methods: {
+    getFile(event) {
+      this.files.push(event.target.files[0]);
+    },
+    async uploadAll() {
+      const fileData = new FormData();
+      this.files.forEach((file) => {
+        fileData.append(file.name, file);
+      });
+      await http.post("/upload", fileData);
+    },
+    async uploadLine() {
+      for (let file of this.files) {
+        const fileData = new FormData();
+        fileData.append(file.name, file);
+        await http.post("/upload", fileData);
+      }
+    },
+    async uploadPromiseAll() {
+        const aysncTask = []
+        this.files.forEach(file => {
+            const fileData = new FormData()
+            fileData.append(file.name, file)
+            const aTask = http.post("/upload", fileData);
+            aysncTask.push(aTask);
+        })
+        const reses = await Promise.allSettled(aysncTask)
+        console.log(reses)
+    },
+    open() {
+      this.$refs.inputOpen.click();
+    },
+    closeFileTag(index) {
+      this.files.splice(this.files.indexOf(index), 1);
+    },
+  },
+};
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
+<style lang="scss" scoped>
+.container {
+  margin: 100px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.input-bu:hover {
+  cursor: pointer;
+  background: #66b1ff;
+  border-color: #66b1ff;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.input-bu {
+  position: relative;
+  background-color: #409eff;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 5px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  input {
+    position: relative;
+    width: 0;
+    height: 0;
+    z-index: -1;
+  }
 }
 </style>
