@@ -111,7 +111,7 @@ export default {
         });
         return;
       }
-      this.loginData.setAction("token", res.data.code);
+      sessionStorage.setItem("token", res.data.data.token);
       // const token = 'QAZ@WSXEDCV%TGuikfijedhngiks'
       // // 放入sessionStorage
       // sessionStorage.setItem('token', token)

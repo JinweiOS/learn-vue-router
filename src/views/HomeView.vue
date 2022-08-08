@@ -155,7 +155,7 @@ export default {
   },
   methods: {
     logout() {
-      ShareStore.clearAction("token");
+      sessionStorage.removeItem('token')
       this.$router.push("/");
     },
     goToMenu(path) {

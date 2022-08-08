@@ -17,7 +17,8 @@ const http = axios.create({
 // 为所有的请求带上身份认证信息
 http.interceptors.request.use(function (config) {
     // 在发送请求之前做些什么
-    config.headers['token'] = 'token'
+    const token = sessionStorage.getItem('token')
+    config.headers['token'] = token
     console.log(config.headers)
     // 一定要return config
     return config

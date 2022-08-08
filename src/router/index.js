@@ -65,19 +65,20 @@ const router = new VueRouter({
 })
 
 // 路由守卫
-// router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
 
-//   let token = ShareStore.getAction('token') // 怎么拿token？
+  let token = sessionStorage.getItem('token') // 怎么拿token？
 
-//   if (to.name === 'home' || to.path === '/login' || to.path === '/404') {
-//     next();
-//     // 这个地方，拿上token，取后端判断
-//   } else if (token) {
-//     next()
-//   } else { // 用户有没有登录
-//     next('/login')
-//   }
-// })
+  if (to.path === '/login' || to.path === '/404') {
+    next();
+    // 这个地方，拿上token，取后端判断
+  } else if (token) {
+    // TODO: 拿到后端去验证
+    next()
+  } else { // 用户有没有登录
+    next('/login')
+  }
+})
 
 
 
